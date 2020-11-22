@@ -57,6 +57,14 @@ class Database {
         return this.connection.promise().query(sqlData, employee);
     }
 
+    // update an employee role
+    // update and employee's new role 
+    //and this information is updated in the database
+    updateEmployeeRole(employee_id, role_id) {
+        const sqlData = `UPDATE employee SET employee.role_id = ? WHERE employee.id = ?`;
+        return this.connection.query(sqlData, [employee_id, role_id]);
+    }
+
 }
 
 module.exports = new Database(connection);
