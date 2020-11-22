@@ -1,11 +1,11 @@
 //Dependencies
 require('dotenv').config();
 const mysql = require("mysql2");
-//const connection = require("./db/connection");
 const db = require("./db");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 const figlet = require("figlet");
+//const { response } = require('express');
 //const { updateEmployeeRole } = require('./db');
 
 figlet('EMPLOYEE TRACKER!!', function (err, data) {
@@ -42,8 +42,8 @@ const promptResponse = () => {
                 "delete departments",
                 "delete roles",
                 "delete employees",
-                "view the total utilized budget of a department"
-                // "exit"
+                "view the total utilized budget of a department",
+                "exit"
             ]
         },
     ])
@@ -69,23 +69,27 @@ const promptResponse = () => {
                     break;
                 case "update an employee role":
                     updateRole();
+                    break;
+                case "update employee managers":
+                    updateManagers();
+                    break;
                 //BONUS:
-                // case "view employees by manager":
-                //     viewEmployeesByManager();
-                //     break;
-                // case "view employees by department":
-                //     viewEmployeesByDept();
-                //     break;
-                // case "delete departments":
-                //     deleteDepts();
-                //     break
-                // case "delete roles":
+                case "view employees by manager":
+                    viewEmployeesByManager();
+                    break;
+                case "view employees by department":
+                    viewEmployeesByDept();
+                    break;
+                case "delete departments":
+                    deleteDepts();
+                    break;
+                case "delete roles":
                 //     deleteRoles();
                 //     break;
-                // case "delete employees":
+                case "delete employees":
                 //     deleteEmployees();
                 //     break;
-                // case "view the total utilized budget of a department":
+                case "view the total utilized budget of a department":
                 //     viewDeptBudget();
                 //     break;
                 // default:
@@ -97,8 +101,8 @@ const promptResponse = () => {
 // view all departments(formatted table showing department names and department ids)
 const viewDepts = () => {
     db.findDepts()
-        .then(([rows]) => {
-            let departments = rows;
+        .then(([data]) => {
+            let departments = data;
             console.log("ALL-DEPT");
             console.table(departments);
         })
@@ -108,8 +112,8 @@ const viewDepts = () => {
 // view all roles(job title, role id, the department that role belongs to, and the salary for that role)
 const viewRoles = () => {
     db.findRoles()
-        .then(([rows]) => {
-            let roles = rows;
+        .then(([data]) => {
+            let roles = data;
             console.log("ALL-ROLES");
             console.table(roles);
         })
@@ -120,8 +124,8 @@ const viewRoles = () => {
 //and managers that the employees report to)
 const viewEmployees = () => {
     db.findEmployees()
-        .then(([rows]) => {
-            let employees = rows;
+        .then(([data]) => {
+            let employees = data;
             console.log("ALL-EMPL");
             console.table(employees);
         })
@@ -150,8 +154,8 @@ const addDept = () => {
 //and that role is added to the database
 const addRole = () => {
     db.findDepts()
-        .then(([rows]) => {
-            let depts = rows;
+        .then(([data]) => {
+            let depts = data;
             const deptArr = depts.map(({ id, name }) => ({
                 name: name,
                 value: id
@@ -217,8 +221,8 @@ const addEmployee = () => {
             const employeeName = [answer.first_name, answer.last_name];
 
             db.findRoles()
-                .then(([rows]) => {
-                    let roles = rows;
+                .then(([data]) => {
+                    let roles = data;
 
                     const roleChoices = roles.map(({ id, title }) => ({ name: title, value: id }));
                     inquirer.prompt(
@@ -258,20 +262,19 @@ const addEmployee = () => {
                 })
         })
 }
-
 // update an employee's new role 
 //and this information is updated in the database
 const updateRole = () => {
     db.findEmployees()
-        .then(([rows]) => {
-            let employees = rows;
-            const employeeChoice = employees.map(({ first_name, last_name, id }) => ({ name: first_name + ' ' + last_name, value: id }));
+        .then(([data]) => {
+            let employees = data;
+            const choiceEmployee = employees.map(({ first_name, last_name, id }) => ({ name: first_name + ' ' + last_name, value: id }));
             inquirer.prompt([
                 {
                     type: "list",
                     name: "employee_id",
                     message: "Please choose the employee.",
-                    choices: employeeChoice
+                    choices: choiceEmployee
                 }
             ])
                 .then(answers => {
@@ -279,36 +282,138 @@ const updateRole = () => {
                     db.findRoles()
                         .then(([rows]) => {
                             let roles = rows;
-                            const choices = roles.map(({ id, title }) => ({ name: title, value: id }));
+                            const choiceRoles = roles.map(({ id, title }) => ({ name: title, value: id }));
                             inquirer.prompt([
                                 {
                                     type: "list",
                                     name: "role_id",
                                     message: "What is employee's new role?",
-                                    choices: choices
+                                    choices: choiceRoles
                                 }
                             ])
-                                .then(answer =>
-                                    updateEmployeeRole(employee_id, answer.role_id))
+                                .then(answer => db.updateEmployeeRole(employee_id, answer.role_id))
                                 .then(() => console.log("Employee role updated"))
                                 .then(() => promptResponse())
-                        })
-                })
+                        });
+                });
         })
-};
-
+}
 //BONUS:
+//update employee managers":
+const updateManagers = () => {
+    db.findEmployees()
+        .then(data => {
+            const results = data[0];
+            //console.log("RESULT", data[0]);
+            const employeeNameArr = results.map(result => {
+                return `${result.first_name} ${result.last_name}`
+            })
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee_choice",
+                    message: "Which employee would you like to assign a new manager?",
+                    choices: employeeNameArr
+                },
+                {
+                    type: "list",
+                    name: "new_manager",
+                    message: "Who is the new manager?",
+                    choices: employeeNameArr
+                }
+            ])
+                .then(answer =>
+                    db.updateEmployeeManagers(answer.employee_id, answer.manager_id)
+                        .then(() => console.log("Employee Manager updated"))
+                        .then(() => promptResponse())
+                )
+        }
+        )
+}
 //view employees by manager
-
 const viewEmployeesByManager = () => {
+    db.findEmployees()
+        .then(data => {
+            const manager = data[0];
+            const managerArr = manager.map(manager => {
+                return `${manager.first_name} ${manager.last_name} ${manager.id}`
+            })
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: 'manager_id',
+                    message: "Which manager would you like to see the reports for?",
+                    choices: managerArr
+                }
+            ])
+                .then(answer =>
+                    db.findEmplByManager(answer.manager_id))
+            then(([data]) => {
+                //, (err, res) => {
+                // if (err) throw err;
+                // const tableData = [];
+                // for (let i = 0; i < res.length; i++) {
+                //     tableData.push({
+                //         "id": res[i].id,
+                //         "first name": res[i].first_name,
+                //         "department": res[i].department_name
+                //     })
 
-};
+                // }
+                let employees = data;
+                console.log(`Employees managed by MANAGER: ${manager}`);
+                console.table(employees);
+            })
+                .then(() => promptResponse());
+        }
+        )//***error undefined */
+}
 
 // view employees by department
-// const viewEmployeesByDept = () =>{};
+const viewEmployeesByDept = () => {
+    db.findEmplByDept()
+        .then(data => {
+            const results = data[0];
+            const deptArr = results.map(result => {
+                return `${result.department.id} ${result.department.name}`
+            })
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "department_id",
+                    message: "Select department to see employees",
+                    choices: deptArr
+                }
+            ])
+                .then(answer => db.findEmplByDept(answer.department_id))
 
-// delete departments
-// const deleteDepts = () => {};
+                .then(() => console.log("EMPLs by DEPT"))
+                .then(() => console.table(employees))
+                .then(() => promptResponse());
+        })
+} /// return ***'undefined, undefined
+
+//  delete departments
+const deleteDepts = () => {
+    db.findDepts()
+        .then(data => {
+            const results = data;
+            const chosenDept = results.map(result => {
+                return `${result.id} ${result.name}`
+            })
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "department_id",
+                    message: "Select department you'd like to delete.",
+                    choices: chosenDept
+                }
+            ])
+                .then(answer => db.removeDept(answer.department_id))
+                .then(() => console.log("Department DELETED"))
+                .then(() => promptResponse());
+        })//**error undefined */
+}
 
 // delete roles
 // const deleteRoles = () => {};

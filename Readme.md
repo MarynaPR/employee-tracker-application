@@ -39,6 +39,10 @@ Run the following command at the root of your directory to prompt questions:
 
 Because this application is not deployed, here's a  link to a walkthrough video that demonstrates its functionality and all of the acceptance criteria below being met.
 
+## Contribution
+
+Contributions, issues and feature requests are welcome. Feel free to check issues page.(link here?) Give (thums up image, or star) if this project helped you.
+
 ## Mock-Up
 
 The following animation shows an example of the application being used from the command line:

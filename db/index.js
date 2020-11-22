@@ -1,12 +1,10 @@
 //You may want to use a separate file containing functions for performing specific SQL queries you'll need to use.
 //A constructor function or Class could be helpful for organizing these
 const connection = require("./connection");
-
 class Database {
     constructor(connection) {
         this.connection = connection;
     }
-
     //all departments 
     findDepts() {
         const sqlData = `SELECT department.id,
@@ -49,22 +47,58 @@ class Database {
         const sqlData = `INSERT INTO role (title, salary, department_id) VALUES (?);`;
         return this.connection.promise().query(sqlData, role);
     }
-    //add an employee
-    // prompted to enter the employee’s first name, last name, 
+    // employee’s first name, last name, 
     //role, and manager 
     createEmployee(employee) {
         const sqlData = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?);`;
         return this.connection.promise().query(sqlData, employee);
     }
-
-    // update an employee role
     // update and employee's new role 
     //and this information is updated in the database
     updateEmployeeRole(employee_id, role_id) {
-        const sqlData = `UPDATE employee SET employee.role_id = ? WHERE employee.id = ?`;
-        return this.connection.query(sqlData, [employee_id, role_id]);
+        const sqlData = `UPDATE employee SET role_id = ? WHERE id = ?`;
+        return this.connection.promise().query(sqlData, [role_id, employee_id]);
+    }
+    //BONUS
+    //update employee managers
+    updateEmployeeManagers(employee_id, manager_id) {
+        const sqlData = `UPDATE employee SET role_id = ? WHERE id =?`;
+        return this.connection.promise().query(sqlData, [manager_id, employee_id]);
+    }
+    //
+    findEmplByManager(manager_id) {
+        const sqlData = `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, 
+        CONCAT(manager.first_name, " ", manager.last_name) AS manager
+        FROM employee 
+        INNER JOIN role ON employee.role_id = role.id
+        INNER JOIN employee AS manager ON employee.manager_id = manager.id
+        INNER JOIN department ON department.id = role.department_id
+        WHERE CONCAT(manager.first_name, " ", manager.last_name);`;
+        //`SELECT employee.first_name, employee.last_name, employee.id FROM employee WHERE id = ?`;
+        return this.connection.promise().query(sqlData, manager_id);
+    }
+    // view employees by department
+    findEmplByDept(department_id) {
+        const sqlData = `SELECT employee.first_name,
+        employee.last_name, department.name AS department
+        FROM employee
+        LEFT JOIN role ON employee.role_id=role.id 
+        LEFT JOIN department ON role.department_id=department.id;`;
+        return this.connection.promise().query(sqlData, department_id);
     }
 
+    removeDept(department_id) {
+        const sqlData = `SELECT department.name, department.id FROM department;`;
+        return this.connection.promise().query(sqlData, department_id);
+    }
+
+    // removeEmployee(employee.id) {
+    //     const sqlData = `SELECT employee.first_name,
+    //     employee.last_name,
+    //     employee.id
+    //     FROM employee;`;
+    //     return this.connection.promise().query(sqlData, employee.id);
+    // }
 }
 
 module.exports = new Database(connection);
