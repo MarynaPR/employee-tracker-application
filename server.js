@@ -154,11 +154,11 @@ const addDept = () => {
 //and that role is added to the database
 const addRole = () => {
     db.findDepts()
-        .then(data => {
-            const results = data[0];
+        .then(([data]) => {
+            let results = data;
             // console.log("RESULT", data[0]);
             const chosenDept = results.map(({ name, id }) => ({
-                name: `${name}`,
+                name: name,
                 value: id
             }))
 
@@ -374,7 +374,7 @@ const viewEmployeesByManager = () => {
 const viewEmployeesByDept = () => {
     db.findEmplByDept()
         .then(data => {
-            const results = data[0];
+            //const results = data[0];
             console.log("RESULT", data[0]);
             const deptArr = results.map(result => {
                 return `${result.department.id} ${result.department.name}`
@@ -400,7 +400,7 @@ const deleteDepts = () => {
     db.findDepts()
         .then(data => {
             const results = data[0];
-            console.log("RESULT", data[0]);
+            // console.log("RESULT", data[0]);
             const chosenDept = results.map(({ name, id }) => ({
                 name: `${name}`,
                 value: id
@@ -426,7 +426,7 @@ const deleteRoles = () => {
     db.findRoles()
         .then(data => {
             const results = data[0];
-            console.log("RESULT", data[0]);
+            // console.log("RESULT", data[0]);
             const chosenRole = results.map(({ title, id }) => ({
                 name: `${title}`,
                 value: id
@@ -450,7 +450,7 @@ const deleteEmployees = () => {
     db.findEmployees()
         .then(data => {
             const results = data[0];
-            console.log("RESULT", data[0]);
+            //console.log("RESULT", data[0]);
             const chosenEmpl = results.map(({ first_name, last_name, id }) => ({
                 name: `${first_name} ${last_name}`,
                 value: id

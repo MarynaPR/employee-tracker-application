@@ -93,13 +93,13 @@ class Database {
     }
 
     removeRole(role_id) {
-        const sqlData = `DELETE FROM role WHERE id =?;`;
+        const sqlData = `DELETE FROM role WHERE id = ?;`;
         return this.connection.promise().query(sqlData, role_id);
     }
 
-    removeEmployee(employee) {
-        const sqlData = `DELETE FROM employee WHERE id =?;`;
-        return this.connection.promise().query(sqlData, employee.id);
+    removeEmployee(employee_id) {
+        const sqlData = `DELETE FROM employee WHERE id = ?;`;
+        return this.connection.promise().query(sqlData, employee_id);
     }
 
     viewUtilizedBudgets() {
@@ -114,33 +114,3 @@ class Database {
 }
 
 module.exports = new Database(connection);
-
-// INSERT INTO department
-// (name)
-// VALUES
-//     ('Management'),
-//     ('Engineering'),
-//     ('Sales'),
-//     ('Finance'),
-//     ('Legal');
-
-// INSERT INTO role
-// (title, salary, department_id)
-// VALUES
-//     ("CEO", 150000, 1),
-//     ("Sales Lead", 100000, 1),
-//     ("Product Manager", 100000, 1,)
-//     ("Salesperson", 80000, 1),
-//     ("Lead Engineer", 150000, 2),
-//     ("Social Media Manager", 100000, 5),
-//     ("Accountant", 125000, 3),
-//     ("Legal Team Lead", 250000, 4),
-//     ("Lawyer", 190000, 4);
-
-// INSERT INTO employee
-// (first_name, last_name, role_id, manager_id)
-// VALUES
-//     ('John', 'Doe', 1, 1),
-//     ('Mike', 'Chan', 2, 2),
-//     ('Ashley', 'Rodriguez', 3, 3),
-//     ('Kevin', 'Tupik', 4, 4),
