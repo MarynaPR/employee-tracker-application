@@ -84,16 +84,16 @@ const promptResponse = () => {
                     deleteDepts();
                     break;
                 case "delete roles":
-                //     deleteRoles();
-                //     break;
+                    deleteRoles();
+                    break;
                 case "delete employees":
-                //     deleteEmployees();
-                //     break;
+                    deleteEmployees();
+                    break;
                 case "view the total utilized budget of a department":
-                //     viewDeptBudget();
-                //     break;
-                // default:
-                //  quit();
+                    viewDeptBudget();
+                    break;
+                default:
+                    quit();
             }
         });
 };
@@ -154,12 +154,13 @@ const addDept = () => {
 //and that role is added to the database
 const addRole = () => {
     db.findDepts()
-        .then(([data]) => {
-            let depts = data;
-            const deptArr = depts.map(({ id, name }) => ({
-                name: name,
+        .then(data => {
+            const results = data[0];
+            // console.log("RESULT", data[0]);
+            const chosenDept = results.map(({ name, id }) => ({
+                name: `${name}`,
                 value: id
-            }));
+            }))
 
             inquirer.prompt([
                 {
@@ -174,12 +175,12 @@ const addRole = () => {
                     name: 'department_id',
                     type: 'list',
                     message: 'What department would you like to assign a new role?',
-                    choices: deptArr
+                    choices: chosenDept
                 }
             ])
                 .then(role => {
                     db.createRole(role)
-                        .then(() => console.log(`${role.title} role created`))
+                        .then(() => console.log(`Role created`))
                         .then(() => promptResponse())
                 })
         })
@@ -224,7 +225,7 @@ const addEmployee = () => {
                 .then(([data]) => {
                     let roles = data;
 
-                    const roleChoices = roles.map(({ id, title }) => ({ name: title, value: id }));
+                    const roleChoices = roles.map(({ title, id }) => ({ name: title, value: id }));
                     inquirer.prompt(
                         {
                             type: "list",
@@ -239,7 +240,7 @@ const addEmployee = () => {
                             db.findEmployees()
                                 .then(([rows]) => {
                                     let data = rows;
-                                    const managerChoice = data.map(({ id, first_name, last_name }) => ({ name: first_name + ' ' + last_name, value: id }));
+                                    const managerChoice = data.map(({ first_name, last_name, id }) => ({ name: first_name + ' ' + last_name, value: id }));
 
 
                                     inquirer.prompt(
@@ -398,36 +399,90 @@ const viewEmployeesByDept = () => {
 const deleteDepts = () => {
     db.findDepts()
         .then(data => {
-            let deptArr = [];
-            const results = data;
-            console.log("RESULT", data);
-            const chosenDept = results.map(({ name, id }) =>
-                deptArr.push({
-                    name: name,
-                    value: id
-                }))
+            const results = data[0];
+            console.log("RESULT", data[0]);
+            const chosenDept = results.map(({ name, id }) => ({
+                name: `${name}`,
+                value: id
+            }))
             inquirer.prompt(
                 {
                     type: "list",
-                    name: "department_name",
+                    name: "department_id",
                     message: "Select department you'd like to delete.",
                     choices: chosenDept
                 }
             )
-                .then(answer => db.removeDept(answer.department_name))
+                .then(answer => db.removeDept(answer.department_id))
                 .then(() => console.log(`Department DELETED`))
                 .then(() => promptResponse());
-        })//**error undefined */
+        }//**error undefined */
+        )
 }
 
+
 // delete roles
-// const deleteRoles = () => {};
+const deleteRoles = () => {
+    db.findRoles()
+        .then(data => {
+            const results = data[0];
+            console.log("RESULT", data[0]);
+            const chosenRole = results.map(({ title, id }) => ({
+                name: `${title}`,
+                value: id
+            }))
+            inquirer.prompt(
+                {
+                    type: "list",
+                    name: "role_id",
+                    message: "Select role you'd like to delete.",
+                    choices: chosenRole
+                }
+            )
+                .then(answer => db.removeRole(answer.role_id))
+                .then(() => console.log(`Role DELETED`))
+                .then(() => promptResponse());
+        })
+}
 
 // delete employees
-// const deleteEmployees = () = > {};
+const deleteEmployees = () => {
+    db.findEmployees()
+        .then(data => {
+            const results = data[0];
+            console.log("RESULT", data[0]);
+            const chosenEmpl = results.map(({ first_name, last_name, id }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
+            inquirer.prompt(
+                {
+                    type: "list",
+                    name: "employee_id",
+                    message: "Select employee you'd like to delete.",
+                    choices: chosenEmpl
+                }
+            )
+                .then(answer => db.removeEmployee(answer.employee_id))
+                .then(() => console.log(`Employee DELETED`))
+                .then(() => promptResponse());
+        })
+}
 
 // view the total utilized budget of a department
-// const viewDeptBudget = () => {};
+const viewDeptBudget = () => {
+    db.viewUtilizedBudgets()
+        .then(([data]) => {
+            const results = data;
+            console.log("\n");
+            console.table(results);
+        })
+        .then(() => promptResponse());
+
+};
 
 // default
-// quit();
+const quit = () => {
+    console.log("Exit");
+    process.exit();
+};

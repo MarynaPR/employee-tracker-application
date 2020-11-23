@@ -29,6 +29,10 @@ VALUES
     ('John', 'Doe', 1, 1),
     ('Mike', 'Chan', 2, 2),
     ('Ashley', 'Rodriguez', 3, 3),
-    ('Kevin', 'Tupik', 4, 4);
+    ('Kevin', 'Tupik', 4, 4),
+    ('Sara', 'Green', 5, 5),
+    ('Bob', 'Smith', 6, 5),
+    ('Elen', 'Brown', 7, 4),
+    ('Brent', 'Lourd', 8, 7);
     
    

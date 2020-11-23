@@ -62,7 +62,7 @@ class Database {
     //BONUS
     //update employee managers
     updateEmployeeManagers(employee_id, manager_id) {
-        const sqlData = `UPDATE employee SET role_id = ? WHERE id =?`;
+        const sqlData = `UPDATE employee SET role_id = ? WHERE id = ?`;
         return this.connection.promise().query(sqlData, [manager_id, employee_id]);
     }
     //
@@ -87,18 +87,30 @@ class Database {
         return this.connection.promise().query(sqlData, department_id);
     }
 
-    removeDept(department) {
-        const sqlData = `SELECT department.name, department.id FROM department;`;
-        return this.connection.promise().query(sqlData, department.name);
+    removeDept(department_id) {
+        const sqlData = `DELETE FROM department WHERE id = ?;`;
+        return this.connection.promise().query(sqlData, department_id);
     }
 
-    // removeEmployee(employee.id) {
-    //     const sqlData = `SELECT employee.first_name,
-    //     employee.last_name,
-    //     employee.id
-    //     FROM employee;`;
-    //     return this.connection.promise().query(sqlData, employee.id);
-    // }
+    removeRole(role_id) {
+        const sqlData = `DELETE FROM role WHERE id =?;`;
+        return this.connection.promise().query(sqlData, role_id);
+    }
+
+    removeEmployee(employee) {
+        const sqlData = `DELETE FROM employee WHERE id =?;`;
+        return this.connection.promise().query(sqlData, employee.id);
+    }
+
+    viewUtilizedBudgets() {
+        const sqlData = `SELECT department.id, department.name,
+        SUM(role.salary) AS budget
+        FROM employee
+        LEFT JOIN role ON employee.role_id = role.id
+        LEFT JOIN department ON role.department_id = department.id
+        GROUP BY department.id, department.name;`;
+        return this.connection.promise().query(sqlData);
+    }
 }
 
 module.exports = new Database(connection);
