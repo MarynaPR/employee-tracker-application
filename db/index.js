@@ -87,9 +87,9 @@ class Database {
         return this.connection.promise().query(sqlData, department_id);
     }
 
-    removeDept(department_id) {
+    removeDept(department) {
         const sqlData = `SELECT department.name, department.id FROM department;`;
-        return this.connection.promise().query(sqlData, department_id);
+        return this.connection.promise().query(sqlData, department.name);
     }
 
     // removeEmployee(employee.id) {

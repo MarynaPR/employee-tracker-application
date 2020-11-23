@@ -374,6 +374,7 @@ const viewEmployeesByDept = () => {
     db.findEmplByDept()
         .then(data => {
             const results = data[0];
+            console.log("RESULT", data[0]);
             const deptArr = results.map(result => {
                 return `${result.department.id} ${result.department.name}`
             })
@@ -397,20 +398,24 @@ const viewEmployeesByDept = () => {
 const deleteDepts = () => {
     db.findDepts()
         .then(data => {
+            let deptArr = [];
             const results = data;
-            const chosenDept = results.map(result => {
-                return `${result.id} ${result.name}`
-            })
-            inquirer.prompt([
+            console.log("RESULT", data);
+            const chosenDept = results.map(({ name, id }) =>
+                deptArr.push({
+                    name: name,
+                    value: id
+                }))
+            inquirer.prompt(
                 {
                     type: "list",
-                    name: "department_id",
+                    name: "department_name",
                     message: "Select department you'd like to delete.",
                     choices: chosenDept
                 }
-            ])
-                .then(answer => db.removeDept(answer.department_id))
-                .then(() => console.log("Department DELETED"))
+            )
+                .then(answer => db.removeDept(answer.department_name))
+                .then(() => console.log(`Department DELETED`))
                 .then(() => promptResponse());
         })//**error undefined */
 }
