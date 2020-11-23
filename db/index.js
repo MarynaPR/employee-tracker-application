@@ -44,7 +44,7 @@ class Database {
     //add a role
     // prompted to enter the name, salary, and department for the role 
     createRole(role) {
-        const sqlData = `INSERT INTO role (title, salary, department_id) VALUES (?);`;
+        const sqlData = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);`;
         return this.connection.promise().query(sqlData, role);
     }
     // employee’s first name, last name, 
