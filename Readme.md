@@ -46,11 +46,11 @@ Because this application is not deployed, here's a [link](https://drive.google.c
 ## Contribution :heavy_plus_sign: 
 
 Contributions, issues and feature requests are welcome. 
-Feel free to check out [issues page](https://github.com/MarynaPR/Employee-Tracker-Application/issues). 
-Give :star: 
+Check out [issues page](https://github.com/MarynaPR/Employee-Tracker-Application/issues). 
+Give :star: if you found this project useful. 
 
 ### Questions :question: 
 Feel free to contact me with any questions via email :e-mail: pryadkamaryna@gmail.com. 
   
-If you'd like to see my other projects, please checkout my :octocat: 
+If you'd like to see my other projects, please visit my :octocat: 
 [GitHub](https://github.com/MarynaPR?tab=repositories)
