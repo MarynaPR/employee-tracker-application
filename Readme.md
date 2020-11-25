@@ -4,14 +4,12 @@
 
 The following image shows the web application's appearance and functionality: 
 
-![Screenshot](public/assets/.png)
+![Screenshot](Assets/Screenshot.png)
 
 ## Description :page_with_curl:
 
 Developers are often tasked with creating interfaces that make it easy for non-developers to view and interact with information stored in databases. These interfaces are known as Content Management Systems (CMS). 
-
 This code demonstrates a command-line application to manage a company's database of employees using Node.js, Inquirer, and MySQL.
-
 MySQL2 package is used to connect to MySQL database and perform queries, the Inquirer package to interact with the user via the command-line, and the console.table package to print MySQL rows to the console. All queries are made asynchronous. MySQL2 exposes a `.promise()` function on Connections to "upgrade" an existing non-promise connection to use promises. 
 
 ## Technology Used :label: 
@@ -43,11 +41,13 @@ Run the following command at the root of your directory to prompt questions:
 
 ## Testing :repeat_one:
 
-Because this application is not deployed, here's a  link to a walkthrough video that demonstrates its functionality and all of the acceptance criteria below being met.
+Because this application is not deployed, here's a [link](https://drive.google.com/file/d/1kEkKu5LluRS3iOYKoElEEEtXUsfJUFLl/view) to a walkthrough video that demonstrates its functionality.
 
 ## Contribution :heavy_plus_sign: 
 
-Contributions, issues and feature requests are welcome. Feel free to check out [issues page](https://github.com/MarynaPR/Employee-Tracker-Application/issues) Give :star: if this project helped you.
+Contributions, issues and feature requests are welcome. 
+Feel free to check out [issues page](https://github.com/MarynaPR/Employee-Tracker-Application/issues). 
+Give :star: 
 
 ### Questions :question: 
 Feel free to contact me with any questions via email :e-mail: pryadkamaryna@gmail.com. 
