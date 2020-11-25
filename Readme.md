@@ -25,12 +25,14 @@ MySQL2 package is used to connect to MySQL database and perform queries, the Inq
 * [figlet package](https://www.npmjs.com/package/figlet)
 * [MySQL2 package](https://www.npmjs.com/package/mysql2) 
 * [Inquirer package](https://www.npmjs.com/package/inquirer)
+* [dotenv package](https://github.com/motdotla/dotenv)
 * [console.table package](https://www.npmjs.com/package/console.table) 
 * [emoji-cheat-sheet:for readme](https://github.com/ikatyang/emoji-cheat-sheet)
 
 ## Installation :electric_plug:
 
 * npm init
+* npm install dotenv
 * npm install inquirer
 * npm install --save mysql2 
 * npm install console-table --save
