@@ -161,14 +161,12 @@ const addRole = () => {
                 }
             ])
                 .then((role) => {
-                    //console.log('ROLE', role)
                     db.createRole(role)
                         .then(() => console.log(`NEW ROLE ADDED`))
                 })
                 .then(() => promptResponse())
         })
 };
-
 //add an employee
 const addEmployee = () => {
     inquirer.prompt([
@@ -218,7 +216,7 @@ const addEmployee = () => {
                     )
                         .then(answers => {
                             const role = answers.role;
-                            employeeName.role_id = answers.role;//
+                            employeeName.role_id = answers.role;
                             db.findEmployees()
                                 .then(([data]) => {
                                     let employee = data;
@@ -278,7 +276,7 @@ const updateRole = () => {
                 });
         })
 }
-//BONUS:
+//BONUS
 //update employee managers
 const updateManagers = () => {
     db.findEmployees()
@@ -332,14 +330,13 @@ const viewEmployeesByManager = () => {
                 .then(() => console.log(`EMPLOYEES BY MANAGER`))
                 .then(() => promptResponse());
 
-        })//***error object object */
+        })
 };
 // view employees by department
 const viewEmployeesByDept = () => {
     db.findDepts()
         .then(data => {
             const results = data[0];
-            //console.log("RESULT", data[0])
             const deptArr = results.map(({ id, name }) => ({
                 name: `${name}`,
                 value: id
@@ -359,7 +356,7 @@ const viewEmployeesByDept = () => {
                 .then(() => console.log("EMPLOYEES BY DEPARTMENT"))
                 .then(() => promptResponse());
         })
-};/// return ***'undefined, undefined
+};
 //  delete departments
 const deleteDepts = () => {
     db.findDepts()
@@ -380,14 +377,13 @@ const deleteDepts = () => {
                 .then(answer => db.removeDept(answer.department_id))
                 .then(() => console.log(`DEPARTMENT DELETED`))
                 .then(() => promptResponse());
-        })//**error undefined */
+        })
 };
 // delete roles
 const deleteRoles = () => {
     db.findRoles()
         .then(data => {
             const results = data[0];
-            // console.log("RESULT", data[0]);
             const chosenRole = results.map(({ title, id }) => ({
                 name: `${title}`,
                 value: id
@@ -410,7 +406,6 @@ const deleteEmployees = () => {
     db.findEmployees()
         .then(data => {
             const results = data[0];
-            //console.log("RESULT", data[0]);
             const chosenEmpl = results.map(({ first_name, last_name, id }) => ({
                 name: `${first_name} ${last_name}`,
                 value: id
@@ -421,8 +416,7 @@ const deleteEmployees = () => {
                     name: "employee_id",
                     message: "Select employee you'd like to delete.",
                     choices: chosenEmpl
-                }
-            )
+                })
                 .then(answer => db.removeEmployee(answer.employee_id))
                 .then(() => console.log(`EMPLOYEE DELETED`))
                 .then(() => promptResponse());
@@ -431,8 +425,8 @@ const deleteEmployees = () => {
 // view the total utilized budget of a department
 const viewDeptBudget = () => {
     db.viewUtilizedBudgets()
-        .then(([data]) => {
-            const results = data;
+        .then(data => {
+            const results = data[0];
             console.log("BUDGET");
             console.table(results);
         })
