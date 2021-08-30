@@ -1,4 +1,4 @@
-# Employee-Tracker-Application
+# employee-tracker-application
 
 ## Images :camera_flash:
 
